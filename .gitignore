@@ -11,3 +11,5 @@
 /bin/
 /composer.phar
 .idea/
+build/
+phpunit.xml
