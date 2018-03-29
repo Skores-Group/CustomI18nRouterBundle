@@ -17,7 +17,7 @@
         }
     },
     "require": {
-        "php": ">=5.3.9",
+        "php": "7.*",
         "doctrine/doctrine-bundle": "~1.4",
         "doctrine/orm": "^2.4.8",
         "incenteev/composer-parameter-handler": "~2.0",
@@ -31,10 +31,6 @@
         "symfony/phpunit-bridge": "~2.7"
     },
     "config": {
-        "bin-dir": "bin",
-        "platform": {
-            "php": "5.3.9"
-        },
-        "sort-packages": true
+        "bin-dir": "bin"
     }
 }

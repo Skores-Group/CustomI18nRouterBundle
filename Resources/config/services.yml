@@ -1,0 +1,14 @@
+services:
+    eb78_router_subscriber:
+        class: EB78\CustomI18nRouterBundle\Subscriber\RouterSubscriber
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    eb78_router_twig:
+        class: EB78\CustomI18nRouterBundle\Twig\CustomRoutingExtension
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: twig.extension }
