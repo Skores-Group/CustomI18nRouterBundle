@@ -1,0 +1,40 @@
+{
+    "name": "eb78/custom-i18n-router-bundle",
+    "type": "symfony-bundle",
+    "description": "Custom Router I18n for Symfony",
+    "keywords": ["symfony", "i18n", "translation"],
+    "homepage": "https://github.com/eborges78/CustomI18nRouterBundle.git",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Emmanuel BORGES",
+            "email": "contact@eborges.fr"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "EB78\\CustomI18nRouterBundle\\": ""
+        }
+    },
+    "require": {
+        "php": ">=5.3.9",
+        "doctrine/doctrine-bundle": "~1.4",
+        "doctrine/orm": "^2.4.8",
+        "incenteev/composer-parameter-handler": "~2.0",
+        "sensio/distribution-bundle": "~4.0",
+        "sensio/framework-extra-bundle": "^3.0.2",
+        "symfony/monolog-bundle": "^3.0.2",
+        "symfony/symfony": "2.8.*"
+    },
+    "require-dev": {
+        "sensio/generator-bundle": "~3.0",
+        "symfony/phpunit-bridge": "~2.7"
+    },
+    "config": {
+        "bin-dir": "bin",
+        "platform": {
+            "php": "5.3.9"
+        },
+        "sort-packages": true
+    }
+}
