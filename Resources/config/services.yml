@@ -12,3 +12,10 @@ services:
             - '@service_container'
         tags:
             - { name: twig.extension }
+
+    eb78_router_command:
+        class: EB78\CustomI18nRouterBundle\Command\RouterCommand
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: console.command }

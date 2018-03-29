@@ -70,7 +70,7 @@ class RouterSubscriber implements EventSubscriberInterface
                 $path = current($paths);
                 if ('_' !== $path[0]) {
                     if (\in_array($path, $this->available_locales, true)) {
-                        $name = 'router_'.$path;
+                        $name = 'i18n_'.$path;
                         if ($this->container->hasParameter($name)) {
                             return $this->setLocaleAndMarket($request, $name);
                         }
@@ -78,7 +78,7 @@ class RouterSubscriber implements EventSubscriberInterface
                 }
             }
             if ($this->container->hasParameter('default_market')) {
-                $name = 'router_'.$this->container->getParameter('default_market');
+                $name = 'i18n_'.$this->container->getParameter('default_market');
                 return $this->setLocaleAndMarket($request, $name);
             }
         } else {

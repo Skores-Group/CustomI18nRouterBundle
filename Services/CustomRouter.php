@@ -63,9 +63,9 @@ class CustomRouter extends Router
         /** @var array $availableMarkets */
         $availableMarkets = $this->container->getParameter('available_locales');
         foreach ($availableMarkets as $market) {
-            if ($this->container->hasParameter('router_'.$market)) {
+            if ($this->container->hasParameter('i18n_'.$market)) {
                 /** @var array $config */
-                $config = $this->container->getParameter('router_'.$market);
+                $config = $this->container->getParameter('i18n_'.$market);
                 $prefix = $host = $country = $locale = '';
                 foreach ($config as $key => $value) {
                     switch ($key) {
