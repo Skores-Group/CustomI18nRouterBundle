@@ -7,7 +7,7 @@ i18n Bundle for Symfony
 Download the library using Composer:
 
 ```bash
-composer require composer require eb78/custom-i18n-router-bundle
+composer require eb78/custom-i18n-router-bundle
 ```
 
 Register Bundle
