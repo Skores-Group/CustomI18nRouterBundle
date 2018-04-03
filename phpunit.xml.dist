@@ -11,7 +11,7 @@
 
     <testsuites>
         <testsuite name="CustomI18nRouterBundle">
-            <directory suffix="Test.php">Test</directory>
+            <directory suffix="Test.php">Tests/</directory>
         </testsuite>
     </testsuites>
 
