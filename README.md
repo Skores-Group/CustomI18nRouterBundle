@@ -23,9 +23,8 @@ Add Parameters
 ```php
     ...
 parameters:
-    locale: fr
-    available_locales: ['fr-fr', 'pt-pt', 'en-gb']
-    default_market: 'fr-fr'
+    available_locales: ['fr-fr']
+    default_locale: 'fr-fr'
     ...
 ```
 
@@ -40,14 +39,14 @@ For exemple, for a French file, create a file with name "i18n_fr-fr"
 ```php
 parameters:
     i18n_fr-fr:
-        prefix: "" #optional
-        locale: "fr"
-        country: "fr"
-        host: "www.mywebsite.fr" # optional
+        prefix: ""
+        name: "france"
+        localeUId: 1
+        locale: "fr_FR"
+        host: "yourdomain.fr"
         routes:
-            homepage: /
+            home: /accueil/
             contact: /contactez-nous/
-            ...
 ```
 
 
