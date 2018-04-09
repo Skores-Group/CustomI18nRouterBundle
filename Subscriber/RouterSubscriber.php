@@ -94,6 +94,7 @@ class RouterSubscriber implements EventSubscriberInterface
         $request->attributes->set('market', str_replace('_', '-', strtolower($configuredLocale)));
         $request->attributes->set('locale', $locale);
         $request->attributes->set('hasPrefix', !empty($prefix));
+        $request->attributes->set('prefix', $prefix);
         $request->attributes->set('country', $country);
         $request->attributes->set('configFile', $name);
         $request->attributes->set('marketId', (string)$configuration['localeUId']);
