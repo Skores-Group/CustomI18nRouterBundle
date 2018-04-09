@@ -3,6 +3,7 @@ services:
         class: EB78\CustomI18nRouterBundle\Subscriber\RouterSubscriber
         arguments:
             - '@service_container'
+            - '@translator.default'
         tags:
             - { name: kernel.event_subscriber }
 

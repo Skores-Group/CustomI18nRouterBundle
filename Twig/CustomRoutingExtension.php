@@ -13,6 +13,9 @@ class CustomRoutingExtension extends RoutingExtension
     /**  @var ContainerInterface */
     private $container;
 
+    /** Default market ( market is a couple of locale and country ) */
+    const DEFAULT_MARKET = 'fr-fr';
+
     /**
      * CustomRoutingExtension constructor.
      * @param ContainerInterface $container
@@ -35,29 +38,18 @@ class CustomRoutingExtension extends RoutingExtension
     public function getPath($name, $parameters = array(), $relative = false)
     {
         try {
-            if (0 === strpos($name, '_')) {
-                return parent::getPath($name, $parameters, $relative);
+            if (false === strpos($name, '_')) {
+                $market = self::DEFAULT_MARKET;
+                if ($this->container !== null && $this->container->hasParameter('default_locale')) {
+                    $market = $this->container->getParameter('default_locale');
+                }
+                if ($this->masterRequest !== null && $this->masterRequest->attributes->has('market')) {
+                    $market = $this->masterRequest->attributes->get('market');
+                }
+                return parent::getPath($name.'.'.$market, $parameters, $relative);
             }
-            $locale = 'fr';
-            $market = 'fr-fr';
-            if ($this->container->hasParameter('locale')) {
-                $locale = $this->container->getParameter('locale');
-            }
-            if ($this->container->hasParameter('default_market')) {
-                $market = $this->container->getParameter('default_market');
-            }
-            if ($this->masterRequest->attributes->has('_market')) {
-                $market = $this->masterRequest->attributes->get('_market');
-                $locale = substr($market, 0, 2);
-            } elseif ($this->masterRequest->attributes->has('_locale')) {
-                $locale = $this->masterRequest->attributes->get('_locale');
-                $locale = substr($locale, 0, 2);
-            }
-            $parameters['locale'] = $locale;
-            $uri = parent::getPath($name.'.'.$locale.'.'.$market, $parameters, $relative);
         } catch (\Exception $e) {
-            $uri = parent::getPath($name, $parameters, $relative);
         }
-        return $uri;
+        return parent::getPath($name, $parameters, $relative);
     }
 }
