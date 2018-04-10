@@ -5,6 +5,7 @@ namespace EB78\CustomI18nRouterBundle\Subscriber;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\Translator;
@@ -36,26 +37,27 @@ class RouterSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents(): array
     {
-        return array(
-            'kernel.request' => array(
-                array('beforeRouter', 30)
-            )
-        );
+        return [
+            'kernel.request' => [
+                ['beforeRouter', 30]
+            ]
+        ];
     }
 
     /**
      * RouterSubscriber constructor.
      * @param ContainerInterface $container
+     * @param RequestStack $request
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, RequestStack $request)
     {
-        $this->masterRequest = $container->get('request_stack')->getMasterRequest();
+        $this->masterRequest = $request->getMasterRequest();
         $this->container = $container;
     }
 
     /**
      * @param GetResponseEvent $event
-     * @return void
+     * @return array
      */
     public function beforeRouter(GetResponseEvent $event)
     {
@@ -64,26 +66,24 @@ class RouterSubscriber implements EventSubscriberInterface
             $currentMarket = explode('.', $request->attributes->get('_route'));
             $market = @end($currentMarket);
             if ($this->container->hasParameter('i18n_'.$market)) {
-                $this->persistLocaleParameters($request, 'i18n_'.$market);
-                return;
+                return $this->persistLocaleParameters($request, 'i18n_'.$market);
             }
             if ($this->container->hasParameter('default_locale')) {
                 $name = 'i18n_'.$this->container->getParameter('default_locale');
-                $this->persistLocaleParameters($request, $name);
-                return;
+                return $this->persistLocaleParameters($request, $name);
             }
-        } else {
-            // retrieve parameters From Master Request
-            $this->persistLocaleParameters($request, $this->masterRequest->attributes->get('configFile'));
         }
+        // retrieve parameters From Master Request
+        return $this->persistLocaleParameters($request, $this->masterRequest->attributes->get('configFile'));
     }
 
     /**
      * @param Request $request
      * @param string $name
+     * @return array
      * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      */
-    protected function persistLocaleParameters(Request $request, string $name)
+    protected function persistLocaleParameters(Request $request, string $name): array
     {
         $configuration = $this->container->getParameter($name);
         $configuredLocale = (string)$configuration['locale'];
@@ -109,5 +109,6 @@ class RouterSubscriber implements EventSubscriberInterface
         }
         $request->setLocale($locale);
         $request->setDefaultLocale($locale);
+        return $request->attributes->all();
     }
 }

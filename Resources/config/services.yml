@@ -3,7 +3,7 @@ services:
         class: EB78\CustomI18nRouterBundle\Subscriber\RouterSubscriber
         arguments:
             - '@service_container'
-            - '@translator.default'
+            - '@request_stack'
         tags:
             - { name: kernel.event_subscriber }
 
@@ -11,6 +11,8 @@ services:
         class: EB78\CustomI18nRouterBundle\Twig\CustomRoutingExtension
         arguments:
             - '@service_container'
+            - '@request_stack'
+            - '@router'
         tags:
             - { name: twig.extension }
 

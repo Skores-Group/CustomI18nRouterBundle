@@ -5,6 +5,8 @@ namespace EB78\CustomI18nRouterBundle\Twig;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 
 class CustomRoutingExtension extends RoutingExtension
 {
@@ -19,14 +21,14 @@ class CustomRoutingExtension extends RoutingExtension
     /**
      * CustomRoutingExtension constructor.
      * @param ContainerInterface $container
-     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
-     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
+     * @param RequestStack $request
+     * @param RouterInterface $router
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, RequestStack $request, RouterInterface $router)
     {
         $this->container = $container;
-        $this->masterRequest = $container->get('request_stack')->getMasterRequest();
-        parent::__construct($container->get('router'));
+        $this->masterRequest = $request->getMasterRequest();
+        parent::__construct($router);
     }
 
     /**
@@ -43,7 +45,10 @@ class CustomRoutingExtension extends RoutingExtension
                 if ($this->container !== null && $this->container->hasParameter('default_locale')) {
                     $market = $this->container->getParameter('default_locale');
                 }
-                if ($this->masterRequest !== null && $this->masterRequest->attributes->has('market')) {
+                if ($this->masterRequest !== null &&
+                    $this->masterRequest->attributes !== null &&
+                    $this->masterRequest->attributes->has('market')
+                ) {
                     $market = $this->masterRequest->attributes->get('market');
                 }
                 return parent::getPath($name.'.'.$market, $parameters, $relative);
