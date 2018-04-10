@@ -2,7 +2,7 @@
 
 # CustomI18nRouterBundle
 
-i18n Bundle for Symfony
+i18n Bundle for Symfony.
 
 ## Installation
 
