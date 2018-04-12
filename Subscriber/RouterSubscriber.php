@@ -58,6 +58,7 @@ class RouterSubscriber implements EventSubscriberInterface
     /**
      * @param GetResponseEvent $event
      * @return array
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      */
     public function beforeRouter(GetResponseEvent $event)
     {
@@ -74,7 +75,11 @@ class RouterSubscriber implements EventSubscriberInterface
             }
         }
         // retrieve parameters From Master Request
-        return $this->persistLocaleParameters($request, $this->masterRequest->attributes->get('configFile'));
+        $configFile = 'i18n_fr-fr';
+        if ($this->masterRequest->attributes->has('configFile')) {
+            $configFile = $this->masterRequest->attributes->get('configFile');
+        }
+        return $this->persistLocaleParameters($request, $configFile);
     }
 
     /**
