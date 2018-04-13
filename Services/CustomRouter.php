@@ -86,6 +86,7 @@ class CustomRouter extends Router
     public function getRouteCollection()
     {
         $this->collection = new RouteCollection();
+        $defaultLocaleCollection = new RouteCollection();
 
         // Load default current routes
         $this->defaultCollection = $this->container->get('routing.loader')->load(
@@ -106,6 +107,7 @@ class CustomRouter extends Router
             }
         }
 
+        $defaultLocale = $this->container->getParameter('default_locale');
         // Duplicate other routes for alternative markets
         foreach ($this->defaultCollection as $key => $route) {
             foreach ($availableMarkets as $market => $config) {
@@ -133,9 +135,16 @@ class CustomRouter extends Router
 
                 $this->removedRoutes[] = $key;
                 $this->routes[] = $key.'.'.$locale.'-'.$country;
-                $this->collection->add($key.'.'.$locale.'-'.$country, $currentRoute);
+                if ($defaultLocale === ($locale.'-'.$country)) {
+                    $defaultLocaleCollection->add($key.'.'.$locale.'-'.$country, $currentRoute);
+                } else {
+                    $this->collection->add($key.'.'.$locale.'-'.$country, $currentRoute);
+                }
             }
         }
+
+        // Add default_locale collection
+        $this->collection->addCollection($defaultLocaleCollection);
 
         // remove routes
         $this->removeRoutes();
