@@ -94,9 +94,6 @@ class CustomRouter extends Router
             $this->options['resource_type']
         );
 
-        // filter routes ( _ and exceptions )
-        $this->collection->addCollection($this->filterRoutes());
-
         // Find config for available locales
         $availableMarkets = [];
         $list = $this->container->getParameter('available_locales');
@@ -106,6 +103,9 @@ class CustomRouter extends Router
                 $availableMarkets[$market] = $config;
             }
         }
+
+        // filter routes ( _ and exceptions )
+        $this->collection->addCollection($this->filterRoutes($availableMarkets));
 
         $defaultLocale = $this->container->getParameter('default_locale');
         // Duplicate other routes for alternative markets
@@ -169,15 +169,30 @@ class CustomRouter extends Router
     }
 
     /**
+     * @param array $availableMarkets
      * @return RouteCollection
      */
-    private function filterRoutes(): RouteCollection
+    private function filterRoutes(array $availableMarkets = []): RouteCollection
     {
         $tmpCollection = new RouteCollection();
         foreach ($this->defaultCollection as $key => $route) {
             if ($key[0] === '_' || stripos($key, 'pages_exceptions') === 0) {
-                $tmpCollection->add($key, $route);
-                $this->routes[] = $key;
+                foreach ($availableMarkets as $config) {
+                    // find route into config
+                    $configuredLocale = $config['locale'];
+                    $parts = explode('_', $configuredLocale);
+                    $locale = $parts[0];
+                    $country =  strtolower($parts[1]);
+                    $host = $config['host'];
+                    $currentRoute = clone $route;
+
+                    if (strpos($currentRoute->getHost(), '{') === false) {
+                        $currentRoute->setHost($host);
+                    }
+                    $tmpCollection->add($key.'.'.$locale.'-'.$country, $currentRoute);
+                    $this->routes[] = $key.'.'.$locale.'-'.$country;
+                }
+                $this->removedRoutes[] = $key;
                 $this->defaultCollection->remove($key);
             }
         }
