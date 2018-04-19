@@ -63,17 +63,17 @@ class CustomRouter extends Router
             $this->request = $this->container->get('request_stack')->getMasterRequest();
         }
         if ($this->request !== null) {
-            $market = $this->request->attributes->get('market');
+            $locale = $this->request->attributes->get('market');
             if (\in_array($route, $this->routes, true)) {
                 return parent::generate($route, $params, $referenceType);
             }
-            if (\in_array($route.'.'.$market, $this->routes, true)) {
-                return parent::generate($route.'.'.$market, $params, $referenceType);
+            if (\in_array($route.'.'.$locale, $this->routes, true)) {
+                return parent::generate($route.'.'.$locale, $params, $referenceType);
             }
 
-            $end = substr($route, \strlen($route) - \strlen($market), \strlen($market));
-            if ($end === $market) {
-                $route = substr($route, 0, \strlen($route)-\strlen($market) - 1);
+            $end = substr($route, \strlen($route) - \strlen($locale), \strlen($locale));
+            if ($end === $locale) {
+                $route = substr($route, 0, \strlen($route)-\strlen($locale) - 1);
             }
         }
 
@@ -95,22 +95,22 @@ class CustomRouter extends Router
         );
 
         // Find config for available locales
-        $availableMarkets = [];
+        $availableLocales = [];
         $list = $this->container->getParameter('available_locales');
-        foreach ($list as $market) {
-            if ($this->container->hasParameter('i18n_' . $market)) {
-                $config = $this->container->getParameter('i18n_'.$market);
-                $availableMarkets[$market] = $config;
+        foreach ($list as $locale) {
+            if ($this->container->hasParameter('i18n_' . $locale)) {
+                $config = $this->container->getParameter('i18n_'.$locale);
+                $availableLocales[$locale] = $config;
             }
         }
 
         // filter routes ( _ and exceptions )
-        $this->collection->addCollection($this->filterRoutes($availableMarkets));
+        $this->collection->addCollection($this->filterRoutes($availableLocales));
 
         $defaultLocale = $this->container->getParameter('default_locale');
-        // Duplicate other routes for alternative markets
+        // Duplicate other routes for alternative locales
         foreach ($this->defaultCollection as $key => $route) {
-            foreach ($availableMarkets as $market => $config) {
+            foreach ($availableLocales as $locale => $config) {
                 // find route into config
                 $prefix = $config['prefix'];
                 $configuredLocale = $config['locale'];
@@ -169,15 +169,15 @@ class CustomRouter extends Router
     }
 
     /**
-     * @param array $availableMarkets
+     * @param array $availableLocales
      * @return RouteCollection
      */
-    private function filterRoutes(array $availableMarkets = []): RouteCollection
+    private function filterRoutes(array $availableLocales = []): RouteCollection
     {
         $tmpCollection = new RouteCollection();
         foreach ($this->defaultCollection as $key => $route) {
             if ($key[0] === '_' || stripos($key, 'pages_exceptions') === 0) {
-                foreach ($availableMarkets as $config) {
+                foreach ($availableLocales as $config) {
                     // find route into config
                     $configuredLocale = $config['locale'];
                     $parts = explode('_', $configuredLocale);

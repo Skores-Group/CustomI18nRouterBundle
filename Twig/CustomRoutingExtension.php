@@ -15,8 +15,8 @@ class CustomRoutingExtension extends RoutingExtension
     /**  @var ContainerInterface */
     private $container;
 
-    /** Default market ( market is a couple of locale and country ) */
-    const DEFAULT_MARKET = 'fr-fr';
+    /** Default locale */
+    const DEFAULT_LOCALE = 'fr-fr';
 
     /**
      * CustomRoutingExtension constructor.
@@ -41,17 +41,17 @@ class CustomRoutingExtension extends RoutingExtension
     {
         try {
             if (false === strpos($name, '_')) {
-                $market = self::DEFAULT_MARKET;
+                $locale = self::DEFAULT_LOCALE;
                 if ($this->container !== null && $this->container->hasParameter('default_locale')) {
-                    $market = $this->container->getParameter('default_locale');
+                    $locale = $this->container->getParameter('default_locale');
                 }
                 if ($this->masterRequest !== null &&
                     $this->masterRequest->attributes !== null &&
                     $this->masterRequest->attributes->has('market')
                 ) {
-                    $market = $this->masterRequest->attributes->get('market');
+                    $locale = $this->masterRequest->attributes->get('market');
                 }
-                return parent::getPath($name.'.'.$market, $parameters, $relative);
+                return parent::getPath($name.'.'.$locale, $parameters, $relative);
             }
         } catch (\Exception $e) {
         }

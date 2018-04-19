@@ -64,10 +64,10 @@ class RouterSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
         if ($event->isMasterRequest()) {
-            $currentMarket = explode('.', $request->attributes->get('_route'));
-            $market = @end($currentMarket);
-            if ($this->container->hasParameter('i18n_'.$market)) {
-                return $this->persistLocaleParameters($request, 'i18n_'.$market);
+            $currentLocale = explode('.', $request->attributes->get('_route'));
+            $locale = @end($currentLocale);
+            if ($this->container->hasParameter('i18n_'.$locale)) {
+                return $this->persistLocaleParameters($request, 'i18n_'.$locale);
             }
             if ($this->container->hasParameter('default_locale')) {
                 $name = 'i18n_'.$this->container->getParameter('default_locale');
@@ -95,7 +95,7 @@ class RouterSubscriber implements EventSubscriberInterface
         $prefix =  (string)$configuration['prefix'];
         list($locale, $country) = explode('_', $configuredLocale);
 
-        // Market is a LCID string ( couple of locale and country like en-gb )
+        // market is a couple of locale and country like en-gb )
         $request->attributes->set('market', str_replace('_', '-', strtolower($configuredLocale)));
         $request->attributes->set('locale', $locale);
         $request->attributes->set('hasPrefix', !empty($prefix));
