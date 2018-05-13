@@ -85,6 +85,10 @@ class CustomRouter extends Router
      */
     public function getRouteCollection()
     {
+        if (null !== $this->collection) {
+            return $this->collection;
+        }
+
         $this->collection = new RouteCollection();
         $defaultLocaleCollection = new RouteCollection();
 
@@ -255,9 +259,17 @@ class CustomRouter extends Router
      */
     private function resolve($value)
     {
+        if (\is_string($value) && (empty($value) || \strpos($value, '%') === false)) {
+            return $value;
+        }
+
         if (\is_array($value)) {
             foreach ($value as $key => $val) {
-                $value[$key] = $this->resolve($val);
+                if (empty($val) || !\is_string($value) || \strpos($val, '%') === false) {
+                    $value[$key] = $val;
+                } else {
+                    $value[$key] = $this->resolve($val);
+                }
             }
 
             return $value;
