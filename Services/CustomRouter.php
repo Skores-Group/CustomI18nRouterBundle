@@ -59,10 +59,10 @@ class CustomRouter extends Router
      */
     public function generate($route, $params = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
     {
-        if ($this->request === null) {
+        if (null === $this->request) {
             $this->request = $this->container->get('request_stack')->getMasterRequest();
         }
-        if ($this->request !== null) {
+        if (null !== $this->request) {
             $locale = $this->request->attributes->get('market');
             if (\in_array($route, $this->routes, true)) {
                 return parent::generate($route, $params, $referenceType);
@@ -85,6 +85,10 @@ class CustomRouter extends Router
      */
     public function getRouteCollection()
     {
+        if (null !== $this->collection) {
+            return $this->collection;
+        }
+
         $this->collection = new RouteCollection();
         $defaultLocaleCollection = new RouteCollection();
 
@@ -176,7 +180,7 @@ class CustomRouter extends Router
     {
         $tmpCollection = new RouteCollection();
         foreach ($this->defaultCollection as $key => $route) {
-            if ($key[0] === '_' || stripos($key, 'pages_exceptions') === 0) {
+            if ('_' === $key[0] || false !== stripos($key, 'pages_exceptions')) {
                 foreach ($availableLocales as $config) {
                     // find route into config
                     $configuredLocale = $config['locale'];
@@ -255,9 +259,17 @@ class CustomRouter extends Router
      */
     private function resolve($value)
     {
+        if (\is_string($value) && (empty($value) || false === \strpos($value, '%'))) {
+            return $value;
+        }
+
         if (\is_array($value)) {
             foreach ($value as $key => $val) {
-                $value[$key] = $this->resolve($val);
+                if (empty($val) || !\is_string($value) || false === \strpos($val, '%')) {
+                    $value[$key] = $val;
+                } else {
+                    $value[$key] = $this->resolve($val);
+                }
             }
 
             return $value;
