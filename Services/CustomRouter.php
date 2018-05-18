@@ -64,6 +64,7 @@ class CustomRouter extends Router
                 $this->getRouteCollection();
             }
         }
+        $this->routes = array_keys($this->collection->all());
     }
 
     /**
@@ -100,8 +101,6 @@ class CustomRouter extends Router
         if (null !== $this->collection) {
             return $this->collection;
         }
-
-        var_dump('ici');
 
         $this->collection = new RouteCollection();
         $defaultLocaleCollection = new RouteCollection();
