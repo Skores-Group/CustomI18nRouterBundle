@@ -47,11 +47,23 @@ class CustomRouter extends Router
         $resource,
         array $options = array(),
         RequestContext $context = null
+
     ) {
         $this->container = $container;
         $this->request = $container->get('request_stack')->getMasterRequest();
         parent::__construct($container, $resource, $options, $context);
-        $this->getRouteCollection();
+
+        $cachedir = $container->getParameter('kernel.cache_dir').'/';
+        $file = $cachedir. 'routes.meta';
+        if (!file_exists($file)) {
+            $this->getRouteCollection();
+            file_put_contents($file, @serialize($this->collection));
+        } else {
+            $this->collection = @unserialize(file_get_contents($file));
+            if (!($this->collection instanceof RouteCollection)) {
+                $this->getRouteCollection();
+            }
+        }
     }
 
     /**
@@ -88,6 +100,8 @@ class CustomRouter extends Router
         if (null !== $this->collection) {
             return $this->collection;
         }
+
+        var_dump('ici');
 
         $this->collection = new RouteCollection();
         $defaultLocaleCollection = new RouteCollection();
