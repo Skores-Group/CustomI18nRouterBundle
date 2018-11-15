@@ -1,8 +1,6 @@
-[![Build Status](https://travis-ci.org/eborges78/CustomI18nRouterBundle.svg?branch=master)](https://travis-ci.org/eborges78/CustomI18nRouterBundle)
-
 # CustomI18nRouterBundle
 
-i18n Bundle for Symfony.
+i18n Bundle for Symfony forked from eborges78/CustomI18nRouterBundle
 
 ## Installation
 
