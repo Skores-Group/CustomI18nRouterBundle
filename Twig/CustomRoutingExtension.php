@@ -40,8 +40,12 @@ class CustomRoutingExtension extends RoutingExtension
     public function getPath($name, $parameters = array(), $relative = false)
     {
         try {
+            $locale = self::DEFAULT_LOCALE;
+            if (isset($parameters['_locale'])) {
+                $locale = $parameters['_locale'];
+            }
+
             if (false === strpos($name, '_')) {
-                $locale = self::DEFAULT_LOCALE;
                 if ($this->container !== null && $this->container->hasParameter('default_locale')) {
                     $locale = $this->container->getParameter('default_locale');
                 }
