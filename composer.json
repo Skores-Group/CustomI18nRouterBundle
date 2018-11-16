@@ -1,5 +1,5 @@
 {
-    "name": "eb78/custom-i18n-router-bundle",
+    "name": "skores/custom-i18n-router-bundle",
     "type": "symfony-bundle",
     "description": "Custom Router I18n for Symfony",
     "keywords": ["symfony", "i18n", "translation"],
