@@ -1,13 +1,15 @@
 # CustomI18nRouterBundle
 
-i18n Bundle for Symfony forked from eborges78/CustomI18nRouterBundle
+i18n Bundle for Symfony forked from Skores-Group/CustomI18nRouterBundle
+
+Packagist url is : http://54.36.121.135:9080/packages/skores/custom-i18n-router-bundle
 
 ## Installation
 
 Download the library using Composer:
 
 ```bash
-composer require eb78/custom-i18n-router-bundle
+composer require Skores-Group/custom-i18n-router-bundle
 ```
 
 Register Bundle
